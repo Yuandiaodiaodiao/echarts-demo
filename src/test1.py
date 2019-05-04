@@ -18,9 +18,7 @@ def solvefood(filelist):
     filelist.sort(key=lambda x: 0 - len(x))
 
     for filename in filelist:
-        if '青岛' in filename:
-            ok = 1
-        if ok == 0:
+        if '青岛' not in filename:
             continue
         shutil.copyfile('../menus/' + filename, 'Z:/temp.csv')
         with open('Z:/temp.csv', 'r', encoding='utf-8-sig')as f:

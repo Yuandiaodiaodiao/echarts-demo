@@ -3,3 +3,5 @@
 *.rar
 *.img
 /.idea
+/.idea/
+__pycache__
