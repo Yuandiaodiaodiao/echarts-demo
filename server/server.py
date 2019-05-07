@@ -47,7 +47,7 @@ class MainHandler(tornado.web.RequestHandler):
                                    fn.SUM(month_money).alias('month_money'),
                                    fn.AVG(Food.rating).alias('rating'),
                                    fn.SUM(Food.month_sales).alias('month_sales'),
-                                   fn.AVG(Food.prive).alias('price')
+                                   fn.AVG(Food.price).alias('price')
                                    ).group_by(Shop.id)
             if js['heat'] == '无':
                 for item in quer:
