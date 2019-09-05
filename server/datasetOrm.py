@@ -1,6 +1,11 @@
 from peewee import *
-
-database = SqliteDatabase('../dataset.db')
+import json
+with open('../web/src/config/config.json','r')as f:
+    js=json.loads(f.read())
+    dbpath=js['db_path']
+    serverport=js['port']
+    print(dbpath)
+database = SqliteDatabase(dbpath)
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass

@@ -16,3 +16,13 @@
   - yarn build
 ### 运行
 - 启动/server/server.py
+
+###配置ip端口等
+- web/src/config/config.json
+
+示例:
+```
+  "ip":"localhost", 服务器ip
+  "port":8888,    服务器端口
+  "db_path":"../dataset.db"  db文件相对于 server/server.py的相对路径 默认路径为项目根目录
+```

@@ -7,7 +7,10 @@ import webbrowser
 import threading
 from datasetOrm import *
 
-
+with open('../web/src/config/config.json','r')as f:
+    js=json.loads(f.read())
+    serverport=js['port']
+    sip=js['ip']
 class MainHandler(tornado.web.RequestHandler):
     def set_default_headers(self):
         self.set_header('Access-Control-Allow-Origin', "*")
@@ -23,6 +26,12 @@ class MainHandler(tornado.web.RequestHandler):
         js = json.loads(self.request.body)
         print(js)
         month_money = Food.month_sales * Food.price
+        limits = js.get('num')
+        if limits == -1:
+            doans = False
+            limits = 10
+        else:
+            doans = True
         quer = Food.select(Food, Shop.id, Shop.latitude, Shop.longitude, Shop.name, Shop.address,
                            month_money.alias('month_money'),
                            Food.rating.alias('rating'),
@@ -50,32 +59,39 @@ class MainHandler(tornado.web.RequestHandler):
                                    fn.AVG(Food.price).alias('price')
                                    ).group_by(Shop.id)
             if js['heat'] == '无':
-                for item in quer:
-                    res['ans'].append([item.shop.longitude, item.shop.latitude, 1])
+                if doans:
+                    for item in quer:
+                        res['ans'].append([item.shop.longitude, item.shop.latitude, 1])
+                quer = quer.limit(limits)
             elif js['heat'] == '月销量':
-                for item in quer:
-                    res['ans'].append([item.shop.longitude, item.shop.latitude, item.month_sales])
-                quer = quer.order_by(SQL('month_sales').desc()).limit(10)
+                if doans:
+                    for item in quer:
+                        res['ans'].append([item.shop.longitude, item.shop.latitude, item.month_sales])
+                quer = quer.order_by(SQL('month_sales').desc()).limit(limits)
             elif js['heat'] == '月销售额':
-                for item in quer:
-                    res['ans'].append([item.shop.longitude, item.shop.latitude, item.month_money])
-                quer = quer.order_by(SQL('month_money').desc()).limit(10)
+                if doans:
+                    for item in quer:
+                        res['ans'].append([item.shop.longitude, item.shop.latitude, item.month_money])
+                quer = quer.order_by(SQL('month_money').desc()).limit(limits)
             elif js['heat'] == '价格':
-                for item in quer:
-                    res['ans'].append([item.shop.longitude, item.shop.latitude, item.price])
-                quer = quer.order_by(SQL('price').desc()).limit(10)
+                if doans:
+                    for item in quer:
+                        res['ans'].append([item.shop.longitude, item.shop.latitude, item.price])
+                quer = quer.order_by(SQL('price').desc()).limit(limits)
             elif js['heat'] == '评分':
-                for item in quer:
-                    res['ans'].append([item.shop.longitude, item.shop.latitude, item.rating])
-                quer = quer.order_by(SQL('rating').desc()).limit(10)
-            if js['heat'] != '无':
-                for item in quer.dicts().iterator():
-                    res['top10'].append(item)
+                if doans:
+                    for item in quer:
+                        res['ans'].append([item.shop.longitude, item.shop.latitude, item.rating])
+                quer = quer.order_by(SQL('rating').desc()).limit(limits)
+
+            for item in quer.dicts().iterator():
+                res['top10'].append(item)
+
             midd = 0
             all_num = len(res['ans'])
             for item in res['ans']:
                 midd += item[2] / all_num
-            res['midd'] = int(midd+1)
+            res['midd'] = int(midd + 1)
             print(res['midd'])
             self.write(json.dumps(res))
             print('finish')
@@ -96,13 +112,13 @@ def make_app():
 
 def start_browser():
     time.sleep(5)
-    webbrowser.open("http://localhost:8888")
+    webbrowser.open(f"http://{sip}:{serverport}")
 
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(8888)
+    app.listen(serverport)
     # build构建后 直接使用Python作为http server拉起浏览器启动
-    threading.Thread(target=start_browser).start()
+    # threading.Thread(target=start_browser).start()
     print('open web finish')
     tornado.ioloop.IOLoop.current().start()

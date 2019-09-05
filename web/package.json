@@ -9,12 +9,15 @@
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
-    "axios": "latest",
+    "axios": "^0.19.0",
     "core-js": "^2.6.5",
     "echarts": "^4.2.1",
     "element-ui": "^2.8.2",
+    "js-xlsx": "^0.8.22",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.3"
+    "vue-router": "^3.0.3",
+    "xlsx": "^0.15.1",
+    "xlsx-style": "^0.8.13"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",
