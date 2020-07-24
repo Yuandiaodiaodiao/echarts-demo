@@ -1,4 +1,11 @@
+![mmexport1595581076232](README.assets/mmexport1595581076232.jpg)
+
+![mmexport1595581105794](README.assets/mmexport1595581105794.jpg)
+
+![mmexport1595581113098](README.assets/mmexport1595581113098.jpg)
+
 ### python环境
+
 - py3.7
 - pip install tronado
 - pip install peewee
@@ -25,7 +32,7 @@
   "ip":"localhost", 服务器ip
   "port":8888,    服务器端口
   "db_path":"../dataset.db"  db文件相对于 server/server.py的相对路径 默认路径为项目根目录
-```  
+```
 
 # 注意  
 - 修改配置文件后需要重新执行yarn build 并重启server 才能让网页配置生效
